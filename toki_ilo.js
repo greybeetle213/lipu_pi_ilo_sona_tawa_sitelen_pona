@@ -174,7 +174,7 @@
         text = text.replaceAll(/“/g, TokiPonaPunctuation.openQuote)
         text = text.replaceAll(/”/g, TokiPonaPunctuation.closeQoute)
 
-        text = text.replaceAll(/(?<=(\s|\n|^))"/g, TokiPonaPunctuation.openQuote)
+        text = text.replaceAll(/(?<=(\s|\n|^))"(?!\s)/g, TokiPonaPunctuation.openQuote)
         text = text.replaceAll(/"/g, TokiPonaPunctuation.closeQoute)
         for(i = 0; i < TokiPonaLatin.length; i++){
             var word = TokiPonaLatin[i]
