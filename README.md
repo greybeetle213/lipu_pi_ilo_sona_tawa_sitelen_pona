@@ -7,6 +7,6 @@ sina ni la sina wile lukin e lipu kepeken sitelen pona la o pana e nasin tawa li
 <br>
 // @match        https://wikipesija.org/*
 <br>
-open la nasin tawa lipu ni li lon:
+tenpo open la nasin tawa lipu ni li lon:
 <br>
 mi wile lukin e ona kepeken sitelen pona.
