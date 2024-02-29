@@ -9,7 +9,10 @@
 // @match        https://lipukule.org/*
 // @match        https://lipumonsuta.neocities.org/*
 // @match        http://utala.pona.la/*
+// @match        https://jan-lawa-lili.gitlab.io/*
 // @match        https://toki.social/*
+// @match        https://duostories.org/story/*
+// @match        https://ante-toki-ktane.glitch.me/www.bombmanual.com/web/tokipona.html
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        GM_addStyle
 // ==/UserScript==
@@ -172,7 +175,7 @@
         return(TokiPonaSitelen[TokiPonaLatin.indexOf(splitcompound[0])]+"\u200D"+TokiPonaSitelen[TokiPonaLatin.indexOf(splitcompound[1])]+"")
     }
     function toSP(text){
-        if(!text.match(/[a-z]/)){
+        if(!text.match(/[a-z:\.,!\?"]/)){
             return(text)
         }
         text = text.replaceAll(/“/g, TokiPonaPunctuation.openQuote)
@@ -192,7 +195,9 @@
         for(i = 0; i < TokiPonaLatin.length; i++){
             var word = TokiPonaLatin[i]
             var pattern = new RegExp("\\b"+word+"\\b", "g")
+            var pattern_upper = new RegExp("\\b"+word.toUpperCase()+"\\b", "g")
             text = text.replaceAll(pattern, TokiPonaSitelen[i]+"")
+            text = text.replaceAll(pattern_upper, TokiPonaSitelen[i])//"<strong>"+TokiPonaSitelen[i]+"</strong>")
         }
         text = text.replaceAll(/\b[P|T|K|S|M|N|L|J|W]?[a|e|i|o|u|A|E|I|O|U]n?([p|t|k|s|m|n|l|j|w][a|e|i|o|u]n?)*\b/g, getSPName)
         text = text.replaceAll(/:/g, TokiPonaPunctuation.colon)
