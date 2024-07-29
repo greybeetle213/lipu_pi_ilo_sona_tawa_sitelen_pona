@@ -4,14 +4,12 @@
 // @version      0.1
 // @description  try to take over the world!
 // @author       You
-// @match        https://liputenpo.org/*
 // @match        https://wikipesija.org/*
 // @match        https://lipukule.org/*
 // @match        https://lipumonsuta.neocities.org/*
-// @match        http://utala.pona.la/*
+// @match        https://utala.pona.la/*
 // @match        https://jan-lawa-lili.gitlab.io/*
-// @match        https://toki.social/*
-// @match        https://duostories.org/story/*
+// @match        https://tokipona.org/sitata/
 // @match        https://ante-toki-ktane.glitch.me/www.bombmanual.com/web/tokipona.html
 // @icon         data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==
 // @grant        GM_addStyle
@@ -21,6 +19,11 @@
     'use strict';
     // Your code here...
     var TokiPonaLatin=["a","akesi","ala","alasa","ali","ale","anpa","ante","anu","awen","e","en","esun","ijo","ike","ilo","insa","jaki","jan","jelo","jo","kala","kalama","kama","kasi","ken","kepeken","kili","kiwen","ko","kon","kule","kulupu","kute","la","lape","laso","lawa","len","lete","li","lili","linja","lipu","loje","lon","luka","lukin","lupa","ma","mama","mani","meli","mi","mije","moku","moli","monsi","mu","mun","musi","mute","nanpa","nasa","nasin","nena","ni","nimi","noka","o","olin","ona","open","pakala","pali","palisa","pan","pana","pi","pilin","pimeja","pini","pipi","poka","poki","pona","pu","sama","seli","selo","seme","sewi","sijelo","sike","sin","sina","sinpin","sitelen","sona","soweli","suli","suno","supa","suwi","tan","taso","tawa","telo","tenpo","toki","tomo","tu","unpa","uta","utala","walo","wan","waso","wawa","weka","wile","namako","kin","oko","kipisi","leko","monsuta","tonsi","jasima","kijetesantakalu","soko","meso", "epiku", "kokosila", "lanpan", "n", "misikeke", "ku"];
+    var latinforcaps = ""
+    for(var i=0;i<TokiPonaLatin.length;i++){
+        latinforcaps+="|"+TokiPonaLatin[i].toUpperCase()
+    }
+    latinforcaps = " ?\\b(" + latinforcaps.slice(1) + ")\\b ?"
     var TokiPonaSitelen = ['󱤀', '󱤁', '󱤂', '󱤃', '󱤄', '󱤄', '󱤅', '󱤆', '󱤇', '󱤈', '󱤉', '󱤊', '󱤋', '󱤌', '󱤍', '󱤎', '󱤏', '󱤐', '󱤑', '󱤒', '󱤓', '󱤔', '󱤕', '󱤖', '󱤗', '󱤘', '󱤙', '󱤚', '󱤛', '󱤜', '󱤝', '󱤞', '󱤟', '󱤠', '󱤡', '󱤢', '󱤣', '󱤤', '󱤥', '󱤦', '󱤧', '󱤨', '󱤩', '󱤪', '󱤫', '󱤬', '󱤭', '󱤮', '󱤯', '󱤰', '󱤱', '󱤲', '󱤳', '󱤴', '󱤵', '󱤶', '󱤷', '󱤸', '󱤹', '󱤺', '󱤻', '󱤼', '󱤽', '󱤾', '󱤿', '󱥀', '󱥁', '󱥂', '󱥃', '󱥄', '󱥅', '󱥆', '󱥇', '󱥈', '󱥉', '󱥊', '󱥋', '󱥌', '󱥍', '󱥎', '󱥏', '󱥐', '󱥑', '󱥒', '󱥓', '󱥔', '󱥕', '󱥖', '󱥗', '󱥘', '󱥙', '󱥚', '󱥛', '󱥜', '󱥝', '󱥞', '󱥟', '󱥠', '󱥡', '󱥢', '󱥣', '󱥤', '󱥥', '󱥦', '󱥧', '󱥨', '󱥩', '󱥪', '󱥫', '󱥬', '󱥭', '󱥮', '󱥯', '󱥰', '󱥱', '󱥲', '󱥳', '󱥴', '󱥵', '󱥶', '󱥷', '󱥸', '󱥹', '󱥺', '󱥻', '󱥼', '󱥽', '󱥾', '󱥿', '󱦀', '󱦁', '󱦂', '󱦃', '󱦄', '󱦅', '󱦆', '󱦇', '󱦈']
     var TokiPonaPunctuation={
         openBracket: "󱦐",
@@ -94,7 +97,87 @@
     }
     _pj = {};
     _pj_snippets(_pj);
+    function nnptosp(nnp){
+        if(nnp == "WAWA" || nnp == "LA"){
+            return(nnp)
+        }
+        var output = ""
+        var key = {"A":"󱤄", "M":"󱤼", "L":"󱤭", "T":"󱥮", "W":"󱥳"}
+        nnp = nnp.split("")
+        while(nnp.length != 0){
+            output += key[nnp.shift()]
+        }
+        return(output)
+    }
+    function Base10ToTokiPona(base10num){
+        var tokiPonaNumber = ""
+        base10num.replaceAll(",","")
+        if(base10num == 0){
+            return "󱤂"
+        }
+        var endOfNumber = String(base10num)
+        if(String(base10num).length % 2 == 0){
+            var alisNedded = (String(base10num).length/2)-1
+            base10num = Number(endOfNumber.slice(0,2))
+            endOfNumber = endOfNumber.slice(2)
+        }else{
+            var tempnum = Number(endOfNumber.slice(0,1))
+            endOfNumber = String(base10num).slice(1)
+            while(tempnum>0){
+                if(tempnum>=20){
+                    tempnum -= 20
+                    tokiPonaNumber += "󱤼"
+                } else if(tempnum>=5){
+                    tempnum -= 5
+                    tokiPonaNumber += "󱤭"
+                } else if(tempnum>=2){
+                    tempnum -= 2
+                    tokiPonaNumber += "󱥮"
+                } else if(tempnum>=1){
+                    tempnum -= 1
+                    tokiPonaNumber += "󱥳"
+                }
+            }
+            if(base10num >= 100){
+                tokiPonaNumber += "󱤄"
+            }
+            var alisNedded = String(base10num).slice(1).length/2-1
+            base10num = Number(String(base10num).slice(1))
+            if(alisNedded<0){
+                alisNedded = 0
+            }
+            base10num = Number(endOfNumber.slice(0,2))
+            endOfNumber = endOfNumber.slice(2)
+        }
+        while(base10num > 0 || endOfNumber.length > 0 || alisNedded > 0){
+            while(base10num>0){
+                if(base10num>=20){
+                    base10num -= 20
+                    tokiPonaNumber += "󱤼"
+                } else if(base10num>=5){
+                    base10num -= 5
+                    tokiPonaNumber += "󱤭"
+                } else if(base10num>=2){
+                    base10num -= 2
+                    tokiPonaNumber += "󱥮"
+                } else if(base10num>=1){
+                    base10num -= 1
+                    tokiPonaNumber += "󱥳"
+                }
+            }
+            if(alisNedded > 0){
+                alisNedded--
+                base10num = Number(endOfNumber.slice(0,2))
+                endOfNumber = endOfNumber.slice(2)
+                tokiPonaNumber += "󱤄"
+            }
+        }
+        return tokiPonaNumber
+    }
     function getSPName(nameToSP){
+        if(nameToSP == "A" || nameToSP== "E" || nameToSP== "O" || nameToSP== "N"){
+            return(nameToSP)
+        }
         nameToSP = nameToSP.toLowerCase()
         nameToSP = splitMora(nameToSP)
         fineshedSpWord = "";
@@ -174,15 +257,56 @@
         //console.log(TokiPonaSitelen[TokiPonaLatin.indexOf(splitcompound[0])]+"\u200D"+TokiPonaSitelen[TokiPonaLatin.indexOf(splitcompound[1])]+"")
         return(TokiPonaSitelen[TokiPonaLatin.indexOf(splitcompound[0])]+"\u200D"+TokiPonaSitelen[TokiPonaLatin.indexOf(splitcompound[1])]+"")
     }
+    function subn(n){
+        return("󱦆"*n.length)
+    }
+    function suba(a){
+        return("󱤀"*a.length)
+    }
+    var matchText = function(node, regex, callback, excludeElements) {
+
+        excludeElements || (excludeElements = ['script', 'style', 'iframe', 'canvas']);
+        //var child = node.firstChild;
+        var child = node
+        while (child) {
+            switch (child.nodeType) {
+            case 1:
+//                if (excludeElements.indexOf(child.tagName.toLowerCase()) > -1){
+  //                  break
+    //            }
+      //          matchText(child, regex, callback, excludeElements);
+                break;
+            case 3:
+                var bk = 0;
+                child.data.replace(regex, function(all) {
+                    var args = [].slice.call(arguments),
+                        offset = args[args.length - 2],
+                        newTextNode = child.splitText(offset+bk), tag;
+                    bk -= child.data.length + all.length;
+
+                    newTextNode.data = newTextNode.data.substr(all.length);
+                    tag = callback.apply(window, [child].concat(args));
+                    child.parentNode.insertBefore(tag, newTextNode);
+                    child = newTextNode;
+                });
+                regex.lastIndex = 0;
+                break;
+            }
+
+            child = child.nextSibling;
+        }
+
+        return node;
+    };
     function toSP(text){
-        if(!text.match(/[a-z:\.,!\?"]/)){
+        if(!text.match(/[a-zA-Z:\.,!\?"\d]/)){
             return(text)
         }
-        text = text.replaceAll(/“/g, TokiPonaPunctuation.openQuote)
-        text = text.replaceAll(/”/g, TokiPonaPunctuation.closeQoute)
+        text = text.replaceAll(/[“‘]/g, TokiPonaPunctuation.openQuote)
+        text = text.replaceAll(/[”’]/g, TokiPonaPunctuation.closeQoute)
 
-        text = text.replaceAll(/(?<=(\s|\n|^))"(?!\s)/g, TokiPonaPunctuation.openQuote)
-        text = text.replaceAll(/"/g, TokiPonaPunctuation.closeQoute)
+        text = text.replaceAll(/(?<=(\s|\n|^))["'](?!\s)/g, TokiPonaPunctuation.openQuote)
+        text = text.replaceAll(/["']/g, TokiPonaPunctuation.closeQoute)
 
         for(i = 0; i < compoundGlyfs.length; i++){
             var compound = compoundGlyfs[i]
@@ -195,16 +319,19 @@
         for(i = 0; i < TokiPonaLatin.length; i++){
             var word = TokiPonaLatin[i]
             var pattern = new RegExp("\\b"+word+"\\b", "g")
-            var pattern_upper = new RegExp("\\b"+word.toUpperCase()+"\\b", "g")
+            //var pattern_upper = new RegExp("\\b"+word.toUpperCase()+"\\b", "g")
             text = text.replaceAll(pattern, TokiPonaSitelen[i]+"")
-            text = text.replaceAll(pattern_upper, TokiPonaSitelen[i])//"<strong>"+TokiPonaSitelen[i]+"</strong>")
+            //text = text.replaceAll(pattern_upper, "<span>"+TokiPonaSitelen[i]+"</span>")//"<strong>"+TokiPonaSitelen[i]+"</strong>")
         }
-        text = text.replaceAll(/\b[P|T|K|S|M|N|L|J|W]?[a|e|i|o|u|A|E|I|O|U]n?([p|t|k|s|m|n|l|j|w][a|e|i|o|u]n?)*\b/g, getSPName)
+        text = text.replaceAll(/\b[P|T|K|S|M|N|L|J|W|A|E|I|O|U][a|e|i|o|u]?n?([p|t|k|s|m|n|l|j|w][a|e|i|o|u]n?)*\b/g, getSPName)
+        text = text.replaceAll(/\b[AMLTW]+\b/g, nnptosp)
+        text = text.replaceAll(/\b(\d,?)+\b/g, Base10ToTokiPona)
         text = text.replaceAll(/:/g, TokiPonaPunctuation.colon)
         text = text.replaceAll(/\./g, TokiPonaPunctuation.stop)
         text = text.replaceAll(/\?/g, TokiPonaPunctuation.stop)
         text = text.replaceAll(/!/g, TokiPonaPunctuation.stop)
-        text = text.replaceAll(/(?<=\bn*)n(?=n*\b)/g, "󱦆") //replace nnnnnnn
+        text = text.replaceAll(/(?<=\bn*)n(?=n*\b)/g, subn) //replace nnnnnnn
+        text = text.replaceAll(/(?<=\ba*)n(?=a*\b)/g, suba) //replace aaaaaaa
         text = text.replaceAll(/(?<![A-Za-z]) /g, "")
         text = text.replaceAll(/,/g, " ")
         return(text)
@@ -213,8 +340,18 @@
         for (var i = 0; i < node.childNodes.length; i++) {
           var child = node.childNodes[i];
           allDescendants(child);
-          if (child.nodeType === 3){ // 3 is for text node
-            child.nodeValue = toSP(child.nodeValue);
+          if(child.nodeType==3){
+              child.nodeValue = toSP(child.nodeValue)
+              matchText(child, new RegExp(latinforcaps, "g"), function(node, match, offset) {//latinforcaps
+                  var span = document.createElement("span");
+                  span.style.fontWeight = "bolder"
+                  span.style.fontStyle = "italic"
+                  span.className = "search-term";
+                  console.log(match)
+                  var spchar = TokiPonaSitelen[TokiPonaLatin.indexOf(match.toLowerCase().replaceAll(" ", ""))]
+                  span.textContent = spchar;
+                  return span;
+              });
           }
         }
     }
