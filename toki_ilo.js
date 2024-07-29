@@ -98,7 +98,7 @@
     _pj = {};
     _pj_snippets(_pj);
     function nnptosp(nnp){
-        if(nnp == "WAWA" || nnp == "LA" || nnp == "ALA" || nnp == "LAWA"){
+        if(nnp == "WAWA" || nnp == "LA" || nnp == "ALA" || nnp == "LAWA" || nnp == "MA"){
             return(nnp)
         }
         var output = ""
